@@ -3,13 +3,13 @@
 }
 
 body {
-    font-size: 10px;
-    font-family: Tahoma, Arial;
+    font-size: 15px;
+    font-family: Italic, Arial;
 }
 
 div.menu {
     width: 100%;
-    background-color: #4d5791;
+    background-color: #1ec940;
     height: 44px;
     padding: 0 40px;
 }
@@ -25,21 +25,21 @@ div.menu ul li {
 div.menu ul li a {
     display: block;
     padding: 0 20px;
-    line-height: 44px;
-    font-size: 1.4em;
+    line-height: 50px;
+    font-size: 1.1em;
     text-decoration: none;
     color: #fff;
     margin: 0;
 }
 
 div.menu ul li a:hover  {
-    background-color: white;
-    color: #4d5791;
+    background-color: rgb(233, 11, 11);
+    color: #f80a9d;
 }
 
 div.hero {
-    height: 350px;
-    background-color: #b4c6f0;
+    height: 450px;
+    background-color: #064cf1;
     background-image: url('/bg.png');
     background-size: 400px;
     background-repeat: no-repeat;
