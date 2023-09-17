@@ -91,6 +91,12 @@
                 </p>
             </div>
 
+            <!-- New D3.js Chart -->
+            <div class="text-box">
+                <h1>New Chart</h1>
+                <div id="new-chart"></div>
+            </div>
+
         </div>
 
     </div>
@@ -103,6 +109,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js" integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha512-SIMGYRUjwY8+gKg7nn9EItdD8LCADSDfJNutF9TPrvEo86sQmFMh6MyralfIyhADlajSxqc7G0gs7+MwWF/ogQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         var dataSource = {
             datasets: [
@@ -127,6 +134,53 @@
             });
         }
 
+        function createNewChart(data) {
+            // Set up the chart dimensions
+            const margin = {top: 20, right: 30, bottom: 30, left: 40},
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+            // Create an SVG element
+            const svg = d3.select("#new-chart")
+                        .append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Define scales for x and y axes
+            const x = d3.scaleBand()
+                        .domain(data.map(d => d.title))
+                        .range([0, width])
+                        .padding(0.1);
+
+            const y = d3.scaleLinear()
+                        .domain([0, d3.max(data, d => d.budget)])
+                        .range([height, 0]);
+
+            // Create x and y axes
+            const xAxis = d3.axisBottom(x);
+            const yAxis = d3.axisLeft(y);
+
+            // Append x and y axes to the SVG
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(xAxis);
+
+            svg.append("g")
+                .call(yAxis);
+
+            // Create bars based on data
+            svg.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", d => x(d.title))
+                .attr("width", x.bandwidth())
+                .attr("y", d => y(d.budget))
+                .attr("height", d => height - y(d.budget));
+        }
+
         function getBudget() {
             axios.get('/budget')
             .then(function (res) {
@@ -136,8 +190,10 @@
                     dataSource.labels[i] = res.data.myBudget[i].title;
                 }
                 createChart();
+                createNewChart(res.data.myBudget);
             });
         }
+
         getBudget();
     </script>
 </body>
